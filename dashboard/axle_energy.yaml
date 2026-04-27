@@ -1,0 +1,722 @@
+title: AXLE Energy
+views:
+
+# ═══════════════════════════════════════════════════════════════
+# VIEW 1 — LIVE
+# ═══════════════════════════════════════════════════════════════
+
+  - title: Live
+    path: live
+    icon: mdi:solar-power
+    cards:
+      - type: custom:power-flow-card-plus
+        entities:
+          solar:
+            entity: sensor.YOUR_GIVENERGY_SERIAL_pv_power
+          battery:
+            entity: sensor.YOUR_GIVENERGY_SERIAL_battery_power
+            state_of_charge: sensor.YOUR_GIVENERGY_SERIAL_soc
+          grid:
+            entity: sensor.YOUR_GIVENERGY_SERIAL_grid_power
+          home:
+            entity: sensor.YOUR_GIVENERGY_SERIAL_load_power
+
+      - type: gauge
+        entity: sensor.YOUR_GIVENERGY_SERIAL_soc
+        name: Battery SOC
+        unit: '%'
+        min: 0
+        max: 100
+        severity:
+          green: 50
+          yellow: 20
+          red: 0
+
+      - type: glance
+        title: Live power
+        columns: 5
+        entities:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_pv_power
+            name: Solar
+            icon: mdi:solar-power
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_load_power
+            name: Home
+            icon: mdi:home
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_power
+            name: Battery
+            icon: mdi:battery
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_export_power
+            name: Export
+            icon: mdi:transmission-tower-export
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_import_power
+            name: Import
+            icon: mdi:transmission-tower-import
+
+      - type: glance
+        title: Today's totals
+        columns: 6
+        entities:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_pv_energy_today_kwh
+            name: PV
+            icon: mdi:solar-power
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_load_energy_today_kwh
+            name: Consumption
+            icon: mdi:home
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_export_energy_today_kwh
+            name: Export
+            icon: mdi:transmission-tower-export
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_import_energy_today_kwh
+            name: Import
+            icon: mdi:transmission-tower-import
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_charge_energy_today_kwh
+            name: Charged
+            icon: mdi:battery-charging
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_discharge_energy_today_kwh
+            name: Discharged
+            icon: mdi:battery-arrow-down
+
+      - type: glance
+        title: Solar strings
+        columns: 4
+        entities:
+          - entity: sensor.YOUR_GROWATT_SERIAL_input_1_wattage
+            name: SE live (W)
+            icon: mdi:solar-panel
+          - entity: sensor.YOUR_GROWATT_SERIAL_input_2_wattage
+            name: NW live (W)
+            icon: mdi:solar-panel
+          - entity: sensor.YOUR_GROWATT_SERIAL_energy_today_input_1
+            name: SE today (kWh)
+            icon: mdi:solar-power
+          - entity: sensor.YOUR_GROWATT_SERIAL_energy_today_input_2
+            name: NW today (kWh)
+            icon: mdi:solar-power
+
+      - type: custom:apexcharts-card
+        header:
+          title: Power — last 24h
+          show: true
+        graph_span: 24h
+        apex_config:
+          chart:
+            height: 220
+            toolbar:
+              show: false
+          yaxis:
+            labels:
+              formatter: 'EVAL:function(val) { return val.toFixed(0) + ''W'' }'
+          xaxis:
+            type: datetime
+            labels:
+              datetimeFormatter:
+                hour: HH:mm
+              rotate: 0
+              hideOverlappingLabels: true
+          stroke:
+            curve: smooth
+            width: 2
+          grid:
+            borderColor: '#404040'
+          legend:
+            show: true
+            position: top
+        series:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_pv_power
+            name: Solar
+            color: '#c8a800'
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_load_power
+            name: Home
+            color: '#1D9E75'
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_export_power
+            name: Export
+            color: '#E24B4A'
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_power
+            name: Battery
+            color: '#378ADD'
+
+      - type: custom:apexcharts-card
+        header:
+          title: Battery SOC — last 24h
+          show: true
+        graph_span: 24h
+        apex_config:
+          chart:
+            height: 180
+            toolbar:
+              show: false
+          yaxis:
+            min: 0
+            max: 100
+            tickAmount: 5
+            labels:
+              formatter: 'EVAL:function(val) { return val.toFixed(0) + ''%'' }'
+          xaxis:
+            type: datetime
+            labels:
+              datetimeFormatter:
+                hour: HH:mm
+              rotate: 0
+              hideOverlappingLabels: true
+          stroke:
+            curve: smooth
+            width: 2
+          grid:
+            borderColor: '#404040'
+        series:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_soc
+            name: SOC
+            color: '#639922'
+
+      - type: entities
+        title: Battery detail
+        entities:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_soc
+            name: State of charge
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_soc_kwh
+            name: SOC (kWh)
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_capacity_kwh
+            name: Capacity (kWh)
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_voltage
+            name: Voltage
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_battery_current
+            name: Current
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_invertor_temperature
+            name: Inverter temp
+
+      - type: entities
+        title: Grid & system
+        entities:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_grid_voltage
+            name: Grid voltage
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_grid_frequency
+            name: Grid frequency
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_export_limit
+            name: Export limit (W)
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_status
+            name: Inverter status
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_last_updated_time
+            name: Last updated
+
+      - type: glance
+        title: AXLE event monitor
+        columns: 3
+        entities:
+          - entity: sensor.axle_export_window_active
+            name: Export active
+            icon: mdi:lightning-bolt
+          - entity: sensor.axle_event_state
+            name: Event state
+            icon: mdi:state-machine
+          - entity: sensor.axle_solar_cutout_risk
+            name: Cutout risk
+            icon: mdi:solar-power-variant-outline
+
+      - type: entities
+        title: Export breakdown
+        entities:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_export_power
+            name: Total export
+          - entity: sensor.axle_solar_export_contribution
+            name: Solar contribution
+          - entity: sensor.axle_battery_export_contribution
+            name: Battery contribution
+          - entity: sensor.axle_export_limit_headroom
+            name: Headroom to limit
+          - entity: input_number.axle_export_timeout_mins
+            name: Safety timeout (mins)
+
+
+# ═══════════════════════════════════════════════════════════════
+# VIEW 2 — AXLE BRAIN
+# ═══════════════════════════════════════════════════════════════
+
+  - title: AXLE Brain
+    path: axle-brain
+    icon: mdi:brain
+    cards:
+
+      - type: glance
+        title: AXLE v3 system state
+        columns: 3
+        entities:
+          - entity: sensor.axle_v3_status
+            name: Engine
+            icon: mdi:brain
+          - entity: sensor.energy_system_health
+            name: Health
+            icon: mdi:heart-pulse
+          - entity: sensor.axle_forecast_confidence
+            name: Confidence
+            icon: mdi:check-decagram
+
+      - type: glance
+        title: Insights
+        columns: 3
+        entities:
+          - entity: sensor.energy_insight
+            name: Energy
+            icon: mdi:lightning-bolt
+          - entity: sensor.cost_insight
+            name: Rate
+            icon: mdi:cash
+          - entity: sensor.axle_export_window_state
+            name: Export
+            icon: mdi:transmission-tower-export
+
+      - type: markdown
+        title: Tonight's charge decision
+        content: >
+          {% set charge = state_attr('sensor.axle_charge_decision', 'charge_needed') %}
+          {% set target = states('sensor.axle_charge_decision') %}
+          {% set solar = states('sensor.axle_decision_solar_kwh') | float(0) %}
+          {% set load = states('sensor.axle_decision_load_kwh') | float(0) %}
+          {% set min_soc = states('sensor.axle_decision_min_soc') | float(0) %}
+          {% set reason = state_attr('sensor.axle_charge_decision', 'reason') %}
+          {% set net = solar - load %}
+
+          ## {% if charge == true %}🔋 Charging to {{ target }}% (02:00–05:00){% elif charge == false %}☀️ No overnight charge needed{% else %}⏳ Decision pending (01:30){% endif %}
+
+          {% if reason %}*{{ reason }}*{% endif %}
+
+          ---
+
+          | | Solar | Load | Net | Min SOC |
+          |---|---|---|---|---|
+          | **Tomorrow** | **{{ solar | round(1) }} kWh** | **{{ load | round(1) }} kWh** | **{{ net | round(1) }} kWh** | **{{ min_soc | round(1) }}%** |
+
+          {% if solar > 0.1 and load > 0.1 %}
+          {% if net > 0 %}☀️ Solar surplus of **{{ net | round(1) }} kWh** expected
+          {% else %}⚠️ Solar deficit of **{{ (net | abs) | round(1) }} kWh** — battery will discharge
+          {% endif %}
+          {% else %}
+          *Values will populate after tonight's 01:30 decision*
+          {% endif %}
+
+      - type: custom:apexcharts-card
+        header:
+          title: Battery SOC — last 24h
+          show: true
+        graph_span: 24h
+        apex_config:
+          chart:
+            height: 200
+            toolbar:
+              show: false
+          yaxis:
+            min: 0
+            max: 100
+            tickAmount: 5
+            labels:
+              formatter: 'EVAL:function(val) { return val.toFixed(0) + ''%'' }'
+          xaxis:
+            type: datetime
+            labels:
+              datetimeFormatter:
+                hour: HH:mm
+              rotate: 0
+              hideOverlappingLabels: true
+          annotations:
+            yaxis:
+              - y: 20
+                borderColor: '#E24B4A'
+                borderWidth: 1
+                strokeDashArray: 4
+                label:
+                  text: Floor 20%
+                  style:
+                    color: '#E24B4A'
+                    background: transparent
+          stroke:
+            curve: smooth
+            width: 2
+          grid:
+            borderColor: '#404040'
+          legend:
+            show: true
+            position: top
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.1
+              opacityFrom: 0.2
+              opacityTo: 0.0
+        series:
+          - entity: sensor.YOUR_GIVENERGY_SERIAL_soc
+            name: Actual SOC
+            color: '#1D9E75'
+
+      - type: glance
+        title: Tomorrow's energy balance
+        columns: 3
+        entities:
+          - entity: sensor.axle_decision_solar_kwh
+            name: Solar forecast
+            icon: mdi:weather-sunny
+          - entity: sensor.axle_decision_load_kwh
+            name: Load forecast
+            icon: mdi:home-clock
+          - entity: sensor.axle_net_energy_tomorrow
+            name: Net energy
+            icon: mdi:scale-balance
+
+      - type: gauge
+        entity: sensor.axle_decision_min_soc
+        name: Predicted minimum SOC tomorrow
+        unit: '%'
+        min: 0
+        max: 100
+        severity:
+          green: 30
+          yellow: 20
+          red: 0
+
+      - type: markdown
+        title: Last prediction vs reality
+        content: >
+          {% set curve = state_attr('sensor.axle_soc_simulation_curve', 'curve') %}
+          {% set date = state_attr('sensor.axle_soc_simulation_curve', 'decision_date') %}
+          {% set day_type = state_attr('sensor.axle_soc_simulation_curve', 'day_type') %}
+          {% set solar = state_attr('sensor.axle_soc_simulation_curve', 'solar_forecast') | float(0) %}
+          {% set load = state_attr('sensor.axle_soc_simulation_curve', 'load_forecast') | float(0) %}
+          {% set min_soc = state_attr('sensor.axle_soc_simulation_curve', 'min_soc_predicted') | float(0) %}
+          {% set min_h = state_attr('sensor.axle_soc_simulation_curve', 'min_soc_hour') %}
+          {% set max_soc = state_attr('sensor.axle_soc_simulation_curve', 'max_soc_predicted') | float(0) %}
+          {% set charge = state_attr('sensor.axle_soc_simulation_curve', 'charge_needed') %}
+          {% set reason = state_attr('sensor.axle_soc_simulation_curve', 'reason') %}
+          {% set actual_soc = states('sensor.YOUR_GIVENERGY_SERIAL_soc') | float(0) %}
+          {% set actual_solar = states('sensor.YOUR_GROWATT_SERIAL_energy_today') | float(0) %}
+
+          **{{ date }} — {{ day_type }}**
+
+          *{{ reason }}*
+
+          | Metric | Predicted | Actual |
+          |--------|-----------|--------|
+          | Solar | {{ solar | round(1) }} kWh | {{ actual_solar | round(1) }} kWh |
+          | Min SOC | {{ min_soc }}% at {{ min_h }}:00 | {{ actual_soc | round(1) }}% now |
+          | Max SOC | {{ max_soc }}% | — |
+          | Overnight charge | {{ '✅ Yes' if charge else '❌ No' }} | — |
+
+          {% if date == now().strftime('%Y-%m-%d') %}
+          {% set error = min_soc - actual_soc %}
+          {% if error | abs < 5 %}✅ Prediction tracking well ({{ error | round(1) }}% error)
+          {% elif error | abs < 15 %}⚠️ Moderate deviation ({{ error | round(1) }}% error)
+          {% else %}❌ Significant deviation ({{ error | round(1) }}% error)
+          {% endif %}
+          {% else %}
+          *Prediction was for {{ date }}*
+          {% endif %}
+
+      - type: markdown
+        title: Hourly simulation detail
+        content: >
+          {% set curve = state_attr('sensor.axle_soc_simulation_curve', 'curve') %}
+          {% if curve is none or curve | length == 0 %}
+          *Simulation data not yet available — runs at 01:30*
+          {% else %}
+          | Hour | SOC | Solar | Load | Net |
+          |------|-----|-------|------|-----|
+          {% for p in curve %}| {{ p['t'][11:16] }} | {{ p['soc'] }}% | {{ p['pv_kw'] }}kW | {{ p['load_kw'] }}kW | {{ '+' if p['net_kw'] > 0 else '' }}{{ p['net_kw'] }}kW |
+          {% endfor %}
+          {% endif %}
+
+      - type: entities
+        title: Solar & weather context
+        entities:
+          - entity: sensor.YOUR_GROWATT_SERIAL_energy_today
+            name: Solar generated today — Growatt (kWh)
+            icon: mdi:solar-power
+          - entity: sensor.solar_forecast_kwh
+            name: Solar forecast today — Solcast (kWh)
+            icon: mdi:weather-sunny
+          - entity: sensor.solcast_pv_forecast_forecast_tomorrow
+            name: Solar forecast tomorrow — Solcast (kWh)
+            icon: mdi:weather-sunny
+          - entity: sensor.solcast_pv_forecast_power_now
+            name: Solcast power now (W)
+            icon: mdi:solar-power-variant
+          - entity: sensor.solcast_pv_forecast_peak_forecast_tomorrow
+            name: Solcast peak tomorrow (W)
+            icon: mdi:solar-power-variant
+          - entity: sensor.solcast_pv_forecast_peak_time_tomorrow
+            name: Solcast peak time tomorrow
+            icon: mdi:clock-outline
+          - entity: sensor.axle_decision_solar_kwh
+            name: AXLE solar forecast tomorrow (kWh)
+            icon: mdi:calendar-today
+          - entity: sensor.axle_decision_load_kwh
+            name: AXLE load forecast tomorrow (kWh)
+            icon: mdi:home-clock
+          - entity: sensor.axle_net_energy_tomorrow
+            name: Net energy tomorrow (kWh)
+            icon: mdi:scale-balance
+          - entity: sensor.axle_decision_charge_needed
+            name: Charge needed tonight
+            icon: mdi:battery-charging
+          - entity: sensor.axle_weather_condition
+            name: Weather condition
+            icon: mdi:cloud
+          - entity: sensor.axle_ambient_temp_now
+            name: Temperature now
+            icon: mdi:thermometer
+          - entity: sensor.axle_ambient_temp_forecast_low
+            name: Forecast low
+            icon: mdi:thermometer-chevron-down
+          - entity: sensor.axle_ambient_temp_forecast_high
+            name: Forecast high
+            icon: mdi:thermometer-chevron-up
+          - entity: sensor.axle_degree_days_today
+            name: Degree days (heating)
+            icon: mdi:radiator
+          - entity: sensor.axle_heating_demand_predicted
+            name: Heating demand
+            icon: mdi:fire
+          - entity: sensor.axle_day_type
+            name: Day type
+            icon: mdi:calendar
+          - entity: sensor.axle_free_energy_opportunity
+            name: Free energy opportunity
+            icon: mdi:lightning-bolt-circle
+
+      - type: markdown
+        title: AXLE v3 learning progress
+        content: >
+          {% set obs = state_attr('sensor.axle_v3_status', 'observations') | int(0) %}
+          {% set accuracy = states('input_number.axle_soc_accuracy_score') | float(0) %}
+          {% set error = states('input_number.axle_soc_forecast_error') | float(0) %}
+          {% set confidence = states('sensor.axle_forecast_confidence') | int(0) %}
+          {% set last_obs = state_attr('sensor.axle_v3_status', 'last_observation') %}
+          {% set last_dec = state_attr('sensor.axle_v3_status', 'last_decision') %}
+
+          | Parameter | Value |
+          |-----------|-------|
+          | Engine status | {{ states('sensor.axle_v3_status') }} |
+          | Observations recorded | {{ obs }} |
+          | Forecast accuracy | {{ accuracy | round(1) }}% |
+          | Forecast error correction | {{ error | round(1) }}% |
+          | Model confidence | {{ confidence }}% |
+          | Last observation | {{ last_obs or 'pending' }} |
+          | Last decision | {{ last_dec[:10] if last_dec else 'pending' }} |
+
+      - type: custom:apexcharts-card
+        header:
+          title: Forecast accuracy — 14 days
+          show: true
+        graph_span: 14d
+        apex_config:
+          chart:
+            height: 140
+            toolbar:
+              show: false
+          yaxis:
+            min: 0
+            max: 100
+            tickAmount: 4
+            labels:
+              formatter: 'EVAL:function(val) { return val.toFixed(0) + ''%'' }'
+          xaxis:
+            type: datetime
+            labels:
+              datetimeFormatter:
+                day: dd MMM
+              rotate: 0
+              hideOverlappingLabels: true
+          stroke:
+            curve: smooth
+            width: 2
+          fill:
+            type: gradient
+            gradient:
+              shadeIntensity: 0.2
+              opacityFrom: 0.3
+              opacityTo: 0.0
+          grid:
+            borderColor: '#404040'
+          annotations:
+            yaxis:
+              - y: 80
+                borderColor: '#1D9E75'
+                borderWidth: 1
+                strokeDashArray: 3
+                label:
+                  text: Good
+                  style:
+                    color: '#1D9E75'
+                    background: transparent
+        series:
+          - entity: input_number.axle_soc_accuracy_score
+            name: Accuracy
+            color: '#1D9E75'
+
+      - type: markdown
+        title: Model parameters (AXLE managed)
+        content: >
+          {% set capacity = states('input_number.axle_battery_capacity') | float(0) %}
+          {% set load = states('input_number.axle_hourly_load') | float(0) %}
+          {% set charge = states('input_number.axle_charge_power') | float(0) %}
+          {% set timeout = states('input_number.axle_export_timeout_mins') | float(0) %}
+
+          | Parameter | Value | Notes |
+          |-----------|-------|-------|
+          | Battery capacity | {{ capacity }} kWh | Usable capacity |
+          | Avg hourly load | {{ load }} kW | Used for load forecasting |
+          | Grid charge rate | {{ charge }} kW | During 02:00–05:00 cheap window |
+          | Export safety timeout | {{ timeout | int }} mins | Auto-recovery after export event |
+
+      - type: button
+        name: Maintenance Override
+        entity: input_boolean.energy_maintenance_mode
+        icon: mdi:account-wrench
+        tap_action:
+          action: toggle
+
+
+# ═══════════════════════════════════════════════════════════════
+# VIEW 3 — COSTS
+# ═══════════════════════════════════════════════════════════════
+
+  - title: Costs
+    path: costs
+    icon: mdi:cash
+    cards:
+      - type: glance
+        title: Octopus Flux rates now
+        columns: 3
+        entities:
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_current_rate
+            name: Import now
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_current_rate
+            name: Export now
+            icon: mdi:cash-plus
+          - entity: sensor.axle_free_energy_opportunity
+            name: Opportunity
+            icon: mdi:lightning-bolt-circle
+
+      - type: entities
+        title: Octopus Flux — rate windows
+        entities:
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_previous_rate
+            name: Import previous
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_current_rate
+            name: Import now
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_next_rate
+            name: Import next
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_previous_rate
+            name: Export previous
+            icon: mdi:cash-plus
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_current_rate
+            name: Export now
+            icon: mdi:cash-plus
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_next_rate
+            name: Export next
+            icon: mdi:cash-plus
+          - entity: binary_sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_off_peak
+            name: Currently off-peak
+            icon: mdi:clock-outline
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_current_standing_charge
+            name: Standing charge
+            icon: mdi:cash
+
+      - type: custom:apexcharts-card
+        header:
+          title: Import rate — last 24h
+          show: true
+        graph_span: 24h
+        apex_config:
+          chart:
+            height: 180
+            toolbar:
+              show: false
+          yaxis:
+            min: 0
+            labels:
+              formatter: 'EVAL:function(val) { return ''£'' + val.toFixed(3) }'
+          xaxis:
+            type: datetime
+            labels:
+              datetimeFormatter:
+                hour: HH:mm
+              rotate: 0
+              hideOverlappingLabels: true
+          stroke:
+            curve: stepline
+            width: 2
+          grid:
+            borderColor: '#404040'
+        series:
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_current_rate
+            name: Import rate
+            color: '#E24B4A'
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_current_rate
+            name: Export rate
+            color: '#1D9E75'
+
+      - type: glance
+        title: Today's electricity
+        columns: 2
+        entities:
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_current_accumulative_consumption
+            name: Import kWh
+            icon: mdi:transmission-tower-import
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_current_accumulative_cost
+            name: Import cost £
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_previous_accumulative_consumption
+            name: Export kWh
+            icon: mdi:transmission-tower-export
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_previous_accumulative_cost
+            name: Export earned £
+            icon: mdi:cash-plus
+
+      - type: glance
+        title: Yesterday's electricity
+        columns: 2
+        entities:
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_previous_accumulative_consumption
+            name: Import kWh
+            icon: mdi:transmission-tower-import
+          - entity: sensor.octopus_energy_electricity_YOUR_IMPORT_MPAN_previous_accumulative_cost
+            name: Import cost £
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_previous_accumulative_consumption
+            name: Export kWh
+            icon: mdi:transmission-tower-export
+          - entity: sensor.octopus_energy_electricity_YOUR_EXPORT_MPAN_export_previous_accumulative_cost
+            name: Export earned £
+            icon: mdi:cash-plus
+
+      - type: entities
+        title: Gas
+        entities:
+          - entity: sensor.octopus_energy_gas_YOUR_GAS_MPRN_current_rate
+            name: Rate (£/kWh)
+            icon: mdi:fire
+          - entity: sensor.octopus_energy_gas_YOUR_GAS_MPRN_current_standing_charge
+            name: Standing charge
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_gas_YOUR_GAS_MPRN_current_accumulative_consumption_kwh
+            name: Today (kWh)
+            icon: mdi:fire
+          - entity: sensor.octopus_energy_gas_YOUR_GAS_MPRN_current_accumulative_cost
+            name: Today (£)
+            icon: mdi:cash
+          - entity: sensor.octopus_energy_gas_YOUR_GAS_MPRN_previous_accumulative_consumption_kwh
+            name: Yesterday (kWh)
+            icon: mdi:fire
+          - entity: sensor.octopus_energy_gas_YOUR_GAS_MPRN_previous_accumulative_cost
+            name: Yesterday (£)
+            icon: mdi:cash
+
+      - type: entities
+        title: Octoplus
+        entities:
+          - entity: sensor.octopus_energy_YOUR_OCTOPUS_ACCOUNT_octoplus_points
+            name: Points balance
+            icon: mdi:star
+          - entity: binary_sensor.octopus_energy_YOUR_OCTOPUS_ACCOUNT_octoplus_saving_sessions
+            name: Saving session active
+            icon: mdi:flash

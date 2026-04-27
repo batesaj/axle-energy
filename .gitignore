@@ -1,0 +1,26 @@
+# Personal configuration — never commit these
+config/apps.yaml
+config/axle_memory.json
+config/configuration.yaml
+config/automations.yaml
+
+# Secrets
+secrets.yaml
+*.secret
+
+# HA internals
+.storage/
+*.db
+*.db-shm
+*.db-wal
+home-assistant.log*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.env
+
+# OS
+.DS_Store
+Thumbs.db

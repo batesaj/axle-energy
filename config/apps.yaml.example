@@ -1,0 +1,8 @@
+axle_v3:
+  module: axle_v3
+  class: AxleV3Engine
+  # Growatt API credentials (optional — used for historical solar bootstrap)
+  growatt_plant_id: "YOUR_PLANT_ID"
+  growatt_inverter_sn: "YOUR_INVERTER_SERIAL"
+  growatt_username: "YOUR_GROWATT_EMAIL"
+  growatt_password: "YOUR_GROWATT_PASSWORD"
