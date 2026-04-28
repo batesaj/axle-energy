@@ -149,9 +149,9 @@ class AxleV3Engine(hass.Hass):
     # ── STARTUP ───────────────────────────────────────────────
 
     def startup_check(self, kwargs):
-        soc = self._f("sensor.aio_ch2344g372_soc", 50)
-        pv = self._f("sensor.aio_ch2344g372_pv_power", 0)
-        load = self._f("sensor.aio_ch2344g372_load_power", 0)
+        soc = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_soc", 50)
+        pv = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_pv_power", 0)
+        load = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_load_power", 0)
         solar_today = self._f("sensor.solar_forecast_kwh", 0)
         shift_today = self._get_shift_type(datetime.now())
         shift_tomorrow = self._get_shift_type(datetime.now() + timedelta(days=1))
@@ -222,7 +222,7 @@ class AxleV3Engine(hass.Hass):
     def overnight_charge_decision(self, kwargs):
         self.log("=" * 60)
         self.log("AXLE v3.1: Overnight charge decision")
-        soc = self._f("sensor.aio_ch2344g372_soc", 50)
+        soc = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_soc", 50)
         capacity = self._f("input_number.axle_battery_capacity", BATTERY_CAPACITY_KWH)
         charge_kw = self._f("input_number.axle_charge_power", 5.0)
         confidence = self._f("sensor.axle_forecast_confidence", 100)
@@ -324,23 +324,23 @@ class AxleV3Engine(hass.Hass):
         if charge:
             self.log(f"Enabling charge: 02:00-05:00 target={target}%")
             self.call_service("switch/turn_on",
-                entity_id="switch.aio_ch2344g372_enable_charge_schedule")
+                entity_id="switch.aio_YOUR_GIVENERGY_SERIAL_enable_charge_schedule")
             self.call_service("select/select_option",
-                entity_id="select.aio_ch2344g372_charge_start_time_slot_1",
+                entity_id="select.aio_YOUR_GIVENERGY_SERIAL_charge_start_time_slot_1",
                 option="02:00:00")
             self.call_service("select/select_option",
-                entity_id="select.aio_ch2344g372_charge_end_time_slot_1",
+                entity_id="select.aio_YOUR_GIVENERGY_SERIAL_charge_end_time_slot_1",
                 option="05:00:00")
             self.call_service("number/set_value",
-                entity_id="number.aio_ch2344g372_charge_target_soc_1",
+                entity_id="number.aio_YOUR_GIVENERGY_SERIAL_charge_target_soc_1",
                 value=target)
             self.call_service("number/set_value",
-                entity_id="number.aio_ch2344g372_battery_charge_rate",
+                entity_id="number.aio_YOUR_GIVENERGY_SERIAL_battery_charge_rate",
                 value=int(charge_kw * 1000))
         else:
             self.log("No charge needed — disabling schedule")
             self.call_service("switch/turn_off",
-                entity_id="switch.aio_ch2344g372_enable_charge_schedule")
+                entity_id="switch.aio_YOUR_GIVENERGY_SERIAL_enable_charge_schedule")
 
     # ── SIMULATION ────────────────────────────────────────────
 
@@ -435,14 +435,14 @@ class AxleV3Engine(hass.Hass):
         today = datetime.now().strftime("%Y-%m-%d")
         shift_type = self._get_shift_type(datetime.now())
 
-        load = self._f("sensor.aio_ch2344g372_load_energy_today_kwh", 0)
-        pv_givenergy = self._f("sensor.aio_ch2344g372_pv_energy_today_kwh", 0)
+        load = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_load_energy_today_kwh", 0)
+        pv_givenergy = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_pv_energy_today_kwh", 0)
         pv_growatt = self._f(GROWATT_TOTAL_TODAY, 0)
         pv_se = self._f(GROWATT_SE_TODAY, 0)
         pv_nw = self._f(GROWATT_NW_TODAY, 0)
         pv_actual = pv_growatt if pv_growatt > 0 else pv_givenergy
         forecast = self._f("sensor.solar_forecast_kwh", 0)
-        soc = self._f("sensor.aio_ch2344g372_soc", 50)
+        soc = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_soc", 50)
         dd = self._f("sensor.axle_degree_days_today", 0)
 
         # Track if battery reached 100% today
@@ -520,7 +520,7 @@ class AxleV3Engine(hass.Hass):
         last = self.memory.get("last_charge_decision_detail", {})
         if not last: return
         predicted = last.get("min_soc_predicted", 50)
-        actual = self._f("sensor.aio_ch2344g372_soc", 50)
+        actual = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_soc", 50)
         error = predicted - actual
         accuracy = max(0, 100 - abs(error)*2)
         self.memory["accuracy_score"] = round(accuracy, 1)
@@ -598,14 +598,14 @@ class AxleV3Engine(hass.Hass):
         if not (CHEAP_RATE_START <= h < CHEAP_RATE_END): return
         last = self.memory.get("last_charge_decision_detail", {})
         if not last.get("charge_needed", False): return
-        soc = self._f("sensor.aio_ch2344g372_soc", 50)
-        bat = self._f("sensor.aio_ch2344g372_battery_power", 0)
-        schedule = self._get_state("switch.aio_ch2344g372_enable_charge_schedule", "off")
+        soc = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_soc", 50)
+        bat = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_battery_power", 0)
+        schedule = self._get_state("switch.aio_YOUR_GIVENERGY_SERIAL_enable_charge_schedule", "off")
         target = last.get("charge_target_soc", 100)
         if soc >= target:
             self.log("Watchdog: target reached — disabling schedule")
             self.call_service("switch/turn_off",
-                entity_id="switch.aio_ch2344g372_enable_charge_schedule")
+                entity_id="switch.aio_YOUR_GIVENERGY_SERIAL_enable_charge_schedule")
             return
         if schedule == "on" and bat > -100:
             self.log("Watchdog: not charging — re-applying", level="WARNING")
@@ -620,16 +620,16 @@ class AxleV3Engine(hass.Hass):
 
     def export_soc_watchdog(self, kwargs):
         if self._get_state("sensor.axle_export_window_active","off") != "on": return
-        soc = self._f("sensor.aio_ch2344g372_soc", 50)
+        soc = self._f("sensor.aio_YOUR_GIVENERGY_SERIAL_soc", 50)
         if soc <= SOC_MIN_FLOOR:
             self.log(f"EXPORT SOC FLOOR: SOC={soc}% — returning to Eco",
                      level="WARNING")
             self.call_service("select/select_option",
-                entity_id="select.aio_ch2344g372_mode", option="Eco")
+                entity_id="select.aio_YOUR_GIVENERGY_SERIAL_mode", option="Eco")
             self.call_service("switch/turn_on",
-                entity_id="switch.aio_ch2344g372_eco_mode")
+                entity_id="switch.aio_YOUR_GIVENERGY_SERIAL_eco_mode")
             self.call_service("select/select_option",
-                entity_id="select.aio_ch2344g372_force_export", option="Normal")
+                entity_id="select.aio_YOUR_GIVENERGY_SERIAL_force_export", option="Normal")
             try:
                 self.call_service("notify/notify",
                     title="AXLE: Export stopped — battery floor",

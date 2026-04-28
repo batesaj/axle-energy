@@ -315,7 +315,7 @@ At 23:55 each night, compares the overnight prediction against actual SOC. Updat
 Set `NUM_PANELS_NW = 0` and ignore NW-related sensors. The SE array profile will handle all solar generation.
 
 ### Different inverter
-Replace all `aio_ch2344g372_` entity references with your inverter's GivTCP entity prefix.
+Replace all `aio_YOUR_GIVENERGY_SERIAL_` entity references with your inverter's GivTCP entity prefix.
 
 ### Different tariff
 Update `CHEAP_RATE_START`, `CHEAP_RATE_END`, and the Octopus entity IDs. The core logic works with any time-of-use tariff.
